@@ -82,7 +82,6 @@ jobs:
 
 </details>
 
-## Optional 
 **Add a Maximum Parallel Jobs Setting**  
 In the matrix strategy for your job, add the `max-parallel: 2` option. This setting ensures that no more than two matrix job combinations run at the same time, which can help manage resource usage or avoid hitting concurrency limits.
 
