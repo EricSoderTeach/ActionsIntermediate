@@ -2,7 +2,7 @@
 
 1. Create a new repository called `hello-world-javascript-action`
 2. Clone the repository locally and open the folder in an editor.
-3. Follow the [instructions](https://docs.github.com/en/actions/sharing-automations/creating-actions/creating-a-javascript-action#commit-tag-and-push-your-action) on how to setup a JavaScript action. you can skip step 2,3 and 4.
+3. Follow the [instructions](https://docs.github.com/en/actions/sharing-automations/creating-actions/creating-a-javascript-action) on how to setup a JavaScript action. you can skip step 2,3 and 4.
 5. When you reach `commit, tag and push your action` you can keep follow the instructions, or add the provided ci/cd workflow below, or create your own ci/cd flow. Make sure to locate your index.js file in the `src/index.js` and also don´t forget to update the `action.yml`to point to `main:dist/index.js`
 
 <details>
