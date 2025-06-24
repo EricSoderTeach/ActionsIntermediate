@@ -117,7 +117,7 @@ jobs:
 
 **Make this workflow reusable between repositories**
 
-Remove the `workflow_dispatch` trigger and add the `workflow_call` trigger and commit the changes. If your repository is not `public`, then In the repository that resides your now reusable workflow, go to the repository settings -> actions -> general and check the box `Accessible from repositories owned by the user ....`. Create a workflow that consumes this workflow in a new repository by calling the reusable workflow `organzation/repository/.github/workflows/matrix-lab.yml@main`
+Remove the `workflow_dispatch` trigger and add the `workflow_call` trigger and commit the changes. If your repository is `private`, then In the repository that resides your now reusable workflow, go to the repository settings -> actions -> general and check the box `Accessible from repositories owned by the user ....`. Create a workflow that consumes this workflow in a new `private` repository by calling the reusable workflow `organzation/repository/.github/workflows/matrix-lab.yml@main`
 
 <details>
   <summary>Solution</summary>
@@ -158,7 +158,7 @@ on:
   workflow_dispatch:
 jobs:
   consume_workflow:
-    - uses: organzation/repository/.github/workflows/matrix-lab.yml@main
+    uses: organzation/repository/.github/workflows/matrix-lab.yml@main
 ```
 
 </details>
