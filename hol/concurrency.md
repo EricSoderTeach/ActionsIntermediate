@@ -31,8 +31,8 @@ concurrency:
 
 </details>
 
-7. **Add the First Job**  
-   Add a job that runs on the latest Ubuntu runner. Include steps to check out the repository, list the files in the repository, group the output with the `::group::` workflow command and simulate work by pausing for 30 seconds.
+7. **Add the 'upload-tree' Job**  
+   Add a job that runs on the latest Ubuntu runner. Include step to check out the repository, list the files in the repository and add it to a `.txt` file, group the output with the `::group::` workflow command. Add a step to upload the `.txt` file as an artifact and simulate work by pausing for 10 seconds.
 
 <details>
   <summary>Solution</summary> 
@@ -41,22 +41,38 @@ concurrency:
     - name: List files in the repository
       run: |
         echo "::group::The repository ${{ github.repository }} contains the following files"
-        tree
+        tree > tree.txt
+        cat tree.txt
         echo "::endgroup::"
+
+    - name: Upload tree output
+      uses: actions/upload-artifact@v4
+      with:
+        name: tree-output
+        path: tree.txt
 ```
 
 </details>
 
-8. **Add the Second Job**  
-   Add a second job that also runs on the latest Ubuntu runner. Include steps to simulate work by pausing for 30 seconds and then add a summary to the job.
+8. **Add the 'add-summary' Job**  
+   Add a second job that also runs on the latest Ubuntu runner. Download the artifact with the `.txt` file, Include a step to simulate work by pausing for 10 seconds, and then add a [workflow summary](https://github.blog/news-insights/product-news/supercharging-github-actions-with-job-summaries/) to the job showing the contents of the `.txt` file.
 
 <details>
     <summary>Solution</summary>
     
 ```YAML
+      - name: Download tree output
+        uses: actions/download-artifact@v4
+        with:
+          name: tree-output
 
-      - name: Add job summary
-        run: echo "### Job completed! :rocket:" >> $GITHUB_STEP_SUMMARY
+      - name: Add job summary with tree output
+        run: |
+          echo "### Job completed! :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo '### Project Directory Tree' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat tree.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 ```
 
 </details>
@@ -81,7 +97,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  job_one:
+  upload-tree:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 
@@ -90,20 +106,38 @@ jobs:
       - name: List files in the repository
         run: |
           echo "::group::The repository ${{ github.repository }} contains the following files"
-          tree
+          tree > tree.txt
+          cat tree.txt
           echo "::endgroup::"
 
-      - name: Simulate work
-        run: sleep 30  
+      - name: Upload tree output
+        uses: actions/upload-artifact@v4
+        with:
+          name: tree-output
+          path: tree.txt
 
-  job_two:
+      - name: Simulate work
+        run: sleep 10  
+
+  add-summary:
     runs-on: ubuntu-latest
+    needs: upload-tree
     steps:
-      - name: Simulate work
-        run: sleep 30
+      - name: Download tree output
+        uses: actions/download-artifact@v4
+        with:
+          name: tree-output
 
-      - name: Add job summary
-        run: echo "### Job completed! :rocket:" >> $GITHUB_STEP_SUMMARY
+      - name: Simulate work
+        run: sleep 10
+
+      - name: Add job summary with tree output
+        run: |
+          echo "### Job completed! :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo '### Project Directory Tree' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat tree.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 ```
 
 </details>
