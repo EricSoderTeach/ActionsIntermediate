@@ -2,7 +2,7 @@ FROM alpine:3.22
 
 WORKDIR /user/src
 
-COPY etrypoint.sh .
+COPY entrypoint.sh .
 
 RUN chmod +x entrypoint.sh
 
